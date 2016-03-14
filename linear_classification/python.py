@@ -22,30 +22,30 @@ X, Z = loadDataset()
 assert X.shape[0] == Z.shape[0]
 n_samples = len(X)
 
-
 # Display Training Data
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-ax.scatter(X[:,0], X[:,1], c=Z,
+ax.scatter(X[:, 0], X[:, 1], c=Z,
            cmap=plt.cm.cool)
 plt.show()
+
 
 def sigmoid(x):
     return 1.0 / (1.0 + numpy.exp(-x))
 
+
 def loglikelihood(X, Z, W, b):
-    Y = pred(X, W, b)
+    Y = predict(X, W, b)
     assert Y.shape == Z.shape
     return numpy.dot(Z, numpy.log(Y)) + numpy.dot((1 - Z), numpy.log(1 - Y))
 
-def pred(X, W, b):
+
+def predict(X, W, b):
     """
     :return: probability of predicted class 1
     """
     wx = numpy.dot(X, W.T)
     s = sigmoid(wx + b)
-    if s.ndim > 1:
-        # remove redundant dimension - always necessary when feeding with matrix
-        s = s[:, 0]
+    s = s[:, 0]  # remove redundant dimension
     return s
 
 
@@ -54,7 +54,7 @@ def E(X, Z, W, b):
 
 
 def gradient(X, Z, W, b):
-    Y = pred(X, W, b)
+    Y = predict(X, W, b)
     assert Y.shape == Z.shape
 
     dLdW = (numpy.dot(Z - Y, X))
@@ -94,7 +94,7 @@ xs = numpy.c_[x0s.ravel(), x1s.ravel()]
 ax.scatter(X[:, 0], X[:, 1], c=Z,
            cmap=plt.cm.cool)
 
-ys = pred(xs, W, b)
+ys = predict(xs, W, b)
 ax.contour(x0s, x1s, ys.reshape(x0s.shape), levels=[.5], cmap="Greys",
            vmin=0, vmax=1
            )
